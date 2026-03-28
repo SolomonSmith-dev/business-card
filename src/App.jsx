@@ -65,7 +65,8 @@ const Icons = {
   ),
 };
 
-function LinkRow({ icon: Icon, label, value, href, delay }) {
+function LinkRow({ icon, label, value, href, delay }) {
+  const Icon = icon;
   const [hovered, setHovered] = useState(false);
   const [visible, setVisible] = useState(false);
 

@@ -1,16 +1,34 @@
-# React + Vite
+# Business Card
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A personal business-card site built with React and Vite.
 
-Currently, two official plugins are available:
+## Develop / Build
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Package manager:** npm (use `package-lock.json`; do not commit `yarn.lock` or `pnpm-lock.yaml`)
 
-## React Compiler
+```bash
+# Install dependencies
+npm ci
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# Start dev server with HMR
+npm run dev
 
-## Expanding the ESLint configuration
+# Lint
+npm run lint
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Production build (output → dist/)
+npm run build
+
+# Preview production build locally
+npm run preview
+```
+
+## Environment variables
+
+No environment variables are required to run this project.
+
+## CI
+
+GitHub Actions runs `npm run lint` and `npm run build` on every push and pull request to `main` (see [`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
+
+Deployments to GitHub Pages are triggered automatically on push to `main` via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
