@@ -1,36 +1,51 @@
-name: Deploy to GitHub Pages
+name: Deploy Card to Portfolio
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run build
-      - uses: actions/configure-pages@v4
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: './dist'
-      - uses: actions/deploy-pages@v4
-        id: deployment
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PORTFOLIO_DEPLOY_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Clone portfolio repo
+        run: |
+          GIT_SSH_COMMAND="ssh -i ~/.ssh/deploy_key" \
+            git clone git@github.com:SolomonSmith-dev/SolomonSmith-dev.github.io.git portfolio
+
+      - name: Copy card build into portfolio
+        run: |
+          rm -rf portfolio/card
+          cp -r dist portfolio/card
+
+      - name: Commit and push
+        run: |
+          cd portfolio
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add card/
+          if ! git diff --staged --quiet; then
+            GIT_SSH_COMMAND="ssh -i ~/.ssh/deploy_key" git commit -m "chore: deploy card build [skip ci]"
+            GIT_SSH_COMMAND="ssh -i ~/.ssh/deploy_key" git push
+          fi
