@@ -23,6 +23,10 @@ dist-ssr
 # Test coverage
 coverage
 
+# Local screenshots / previews
+*.png
+*.jpeg
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
