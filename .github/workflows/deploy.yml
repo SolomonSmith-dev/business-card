@@ -36,6 +36,7 @@ jobs:
 
       - name: Copy card build into portfolio
         run: |
+          test -f dist/index.html || { echo "Build output missing"; exit 1; }
           rm -rf portfolio/card
           cp -r dist portfolio/card
 
